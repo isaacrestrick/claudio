@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "claudio": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/path/to/claudio/mcp",
+        "run",
+        "server.py"
+      ]
+    }
+  }
+}
