@@ -151,4 +151,12 @@ async def ask_about_audio(session_id: str, question: str) -> str:
 
 
 if __name__ == "__main__":
-    mcp.run()
+    transport = os.getenv("MCP_TRANSPORT", "stdio")
+
+    if transport == "http":
+        # Hosted mode: HTTP transport for remote access
+        port = int(os.getenv("PORT", 8000))
+        mcp.run(transport="http", host="0.0.0.0", port=port)
+    else:
+        # Local mode: stdio transport (default)
+        mcp.run()
