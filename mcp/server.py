@@ -1,33 +1,29 @@
 #!/usr/bin/env python3
-"""Claudio - MCP server for audio understanding via Gemini."""
+"""Claudio - MCP server for audio understanding via Gemini.
+
+Set the GEMINI_API_KEY environment variable before running.
+"""
 
 import os
+import sys
 import uuid
-import mimetypes
 from pathlib import Path
-
-from dotenv import load_dotenv
-
-# Load environment variables
-load_dotenv()
 
 from google import genai
 from google.genai import types
 from mcp.server.fastmcp import FastMCP
 
-# Initialize Gemini client
-client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+# Validate API key at startup
+api_key = os.getenv("GEMINI_API_KEY")
+if not api_key:
+    print("Error: GEMINI_API_KEY environment variable is required", file=sys.stderr)
+    sys.exit(1)
 
-# Initialize MCP server
-# For HTTP mode: Render requires 0.0.0.0 and provides PORT env var
-if os.getenv("MCP_TRANSPORT") == "http":
-    mcp = FastMCP(
-        "claudio",
-        host="0.0.0.0",
-        port=int(os.getenv("PORT", "8000"))
-    )
-else:
-    mcp = FastMCP("claudio")
+# Initialize Gemini client
+client = genai.Client(api_key=api_key)
+
+# Initialize MCP server (stdio only)
+mcp = FastMCP("claudio")
 
 # Session storage: session_id -> (chat_session, uploaded_file)
 sessions: dict[str, tuple] = {}
@@ -159,12 +155,10 @@ async def ask_about_audio(session_id: str, question: str) -> str:
         return f"Error communicating with Gemini: {str(e)}"
 
 
-if __name__ == "__main__":
-    transport = os.getenv("MCP_TRANSPORT", "stdio")
+def main():
+    """Entry point for the MCP server."""
+    mcp.run()
 
-    if transport == "http":
-        # Hosted mode: HTTP transport (host/port set in constructor above)
-        mcp.run(transport="streamable-http")
-    else:
-        # Local mode: stdio transport (default)
-        mcp.run()
+
+if __name__ == "__main__":
+    main()
