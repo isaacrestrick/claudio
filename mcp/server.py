@@ -11,10 +11,10 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
-# Map HOST/PORT to FastMCP's expected env vars (for Render compatibility)
-if os.getenv("MCP_TRANSPORT") == "http":
-    os.environ.setdefault("FASTMCP_HOST", os.getenv("HOST", "0.0.0.0"))
-    os.environ.setdefault("FASTMCP_PORT", os.getenv("PORT", "8000"))
+# Map Render's PORT to FastMCP's expected env var
+# Render injects PORT at runtime (default 10000), FastMCP expects FASTMCP_PORT
+if os.getenv("MCP_TRANSPORT") == "http" and os.getenv("PORT"):
+    os.environ.setdefault("FASTMCP_PORT", os.getenv("PORT"))
 
 from google import genai
 from google.genai import types
