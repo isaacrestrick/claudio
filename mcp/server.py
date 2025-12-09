@@ -11,11 +11,6 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
-# Map Render's PORT to FastMCP's expected env var
-# Render injects PORT at runtime (default 10000), FastMCP expects FASTMCP_PORT
-if os.getenv("MCP_TRANSPORT") == "http" and os.getenv("PORT"):
-    os.environ.setdefault("FASTMCP_PORT", os.getenv("PORT"))
-
 from google import genai
 from google.genai import types
 from mcp.server.fastmcp import FastMCP
@@ -23,8 +18,16 @@ from mcp.server.fastmcp import FastMCP
 # Initialize Gemini client
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
-# Initialize MCP server
-mcp = FastMCP("claudio")
+# Initialize MCP server with Render-compatible settings
+# Render requires binding to 0.0.0.0 and uses PORT env var (default 10000)
+if os.getenv("MCP_TRANSPORT") == "http":
+    mcp = FastMCP(
+        "claudio",
+        host="0.0.0.0",
+        port=int(os.getenv("PORT", "8000"))
+    )
+else:
+    mcp = FastMCP("claudio")
 
 # Session storage: session_id -> (chat_session, uploaded_file)
 sessions: dict[str, tuple] = {}
