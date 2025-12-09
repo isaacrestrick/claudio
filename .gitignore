@@ -1,0 +1,5 @@
+mds/
+mcp/.env
+mcp/.venv
+mcp/__pycache__
+.mcp.json
