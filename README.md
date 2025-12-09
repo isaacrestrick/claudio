@@ -2,9 +2,23 @@
 
 MCP server for audio understanding via Gemini. Ask questions about audio files - describe music, transcribe lyrics, identify instruments, and more.
 
-## Usage
+## Installation
 
-### Hosted (no setup required)
+```bash
+uvx claudio
+```
+
+Or with Claude Code:
+
+```bash
+claude mcp add claudio -e GEMINI_API_KEY=your-key -- uvx claudio
+```
+
+## Configuration
+
+Set the `GEMINI_API_KEY` environment variable. Get one at [Google AI Studio](https://aistudio.google.com/apikey).
+
+### Claude Desktop / Claude Code
 
 Add to your MCP config:
 
@@ -12,23 +26,8 @@ Add to your MCP config:
 {
   "mcpServers": {
     "claudio": {
-      "url": "https://claudio-m2fu.onrender.com/mcp"
-    }
-  }
-}
-```
-
-### Local (bring your own API key)
-
-1. Get a [Gemini API key](https://aistudio.google.com/apikey)
-2. Configure MCP:
-
-```json
-{
-  "mcpServers": {
-    "claudio": {
-      "command": "uv",
-      "args": ["--directory", "/path/to/claudio/mcp", "run", "server.py"],
+      "command": "uvx",
+      "args": ["claudio"],
       "env": { "GEMINI_API_KEY": "your-key" }
     }
   }
