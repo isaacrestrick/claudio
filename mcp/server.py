@@ -28,20 +28,15 @@ mcp = FastMCP("claudio")
 # Session storage: session_id -> (chat_session, uploaded_file)
 sessions: dict[str, tuple] = {}
 
-# Supported audio MIME types
+# Supported audio MIME types (per Gemini docs)
+# https://ai.google.dev/gemini-api/docs/audio
 SUPPORTED_MIME_TYPES = {
     ".wav": "audio/wav",
     ".mp3": "audio/mp3",
-    ".mpeg": "audio/mpeg",
-    ".mpga": "audio/mpeg",
     ".aiff": "audio/aiff",
     ".aac": "audio/aac",
     ".ogg": "audio/ogg",
     ".flac": "audio/flac",
-    ".m4a": "audio/m4a",
-    ".webm": "audio/webm",
-    ".pcm": "audio/pcm",
-    ".mp4": "audio/mp4",
 }
 
 # 20MB threshold for inline vs Files API
@@ -93,7 +88,11 @@ async def listen_to_audio(file_path: str, question: str) -> str:
                 file=path,
                 config={"mime_type": mime_type}
             )
-            audio_part = uploaded_file
+            # Convert uploaded file to a Part for use in chat
+            audio_part = types.Part.from_uri(
+                file_uri=uploaded_file.uri,
+                mime_type=uploaded_file.mime_type
+            )
         else:
             # Use inline data for smaller files
             audio_part = types.Part.from_bytes(
