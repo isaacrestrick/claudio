@@ -155,8 +155,8 @@ if __name__ == "__main__":
 
     if transport == "http":
         # Hosted mode: HTTP transport for remote access
-        port = int(os.getenv("PORT", 8000))
-        mcp.run(transport="http", host="0.0.0.0", port=port)
+        # Set HOST=0.0.0.0 and PORT via environment variables
+        mcp.run(transport="streamable-http")
     else:
         # Local mode: stdio transport (default)
         mcp.run()

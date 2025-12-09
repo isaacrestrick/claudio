@@ -12,7 +12,7 @@ Add to your MCP config:
 {
   "mcpServers": {
     "claudio": {
-      "url": "https://claudio.onrender.com/mcp"
+      "url": "https://claudio-m2fu.onrender.com/mcp"
     }
   }
 }
