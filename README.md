@@ -41,4 +41,4 @@ Add to your MCP config:
 | `listen_to_audio` | Analyze an audio file and ask a question |
 | `ask_about_audio` | Follow-up questions using session ID |
 
-Supports: MP3, WAV, FLAC, AAC, OGG, M4A, WebM, AIFF
+Supports: WAV, MP3, AIFF, AAC, OGG, FLAC
