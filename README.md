@@ -2,6 +2,8 @@
 
 Helping Claude Opus 4.5 hear the music.
 
+## What is it
+
 MCP server for audio understanding via Google Gemini. Ask questions about audio files - describe music, transcribe lyrics, identify instruments, and more.
 
 ## Prerequisites
