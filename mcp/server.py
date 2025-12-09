@@ -7,12 +7,18 @@ import mimetypes
 from pathlib import Path
 
 from dotenv import load_dotenv
-from google import genai
-from google.genai import types
-from mcp.server.fastmcp import FastMCP
 
 # Load environment variables
 load_dotenv()
+
+# Map HOST/PORT to FastMCP's expected env vars (for Render compatibility)
+if os.getenv("MCP_TRANSPORT") == "http":
+    os.environ.setdefault("FASTMCP_HOST", os.getenv("HOST", "0.0.0.0"))
+    os.environ.setdefault("FASTMCP_PORT", os.getenv("PORT", "8000"))
+
+from google import genai
+from google.genai import types
+from mcp.server.fastmcp import FastMCP
 
 # Initialize Gemini client
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
