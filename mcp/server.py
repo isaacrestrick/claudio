@@ -18,16 +18,8 @@ from mcp.server.fastmcp import FastMCP
 # Initialize Gemini client
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
-# Initialize MCP server with Render-compatible settings
-# Render requires binding to 0.0.0.0 and uses PORT env var (default 10000)
-if os.getenv("MCP_TRANSPORT") == "http":
-    mcp = FastMCP(
-        "claudio",
-        host="0.0.0.0",
-        port=int(os.getenv("PORT", "8000"))
-    )
-else:
-    mcp = FastMCP("claudio")
+# Initialize MCP server
+mcp = FastMCP("claudio")
 
 # Session storage: session_id -> (chat_session, uploaded_file)
 sessions: dict[str, tuple] = {}
@@ -164,8 +156,12 @@ if __name__ == "__main__":
 
     if transport == "http":
         # Hosted mode: HTTP transport for remote access
-        # Set HOST=0.0.0.0 and PORT via environment variables
-        mcp.run(transport="streamable-http")
+        # Render requires 0.0.0.0 and provides PORT env var (default 10000)
+        mcp.run(
+            transport="streamable-http",
+            host="0.0.0.0",
+            port=int(os.getenv("PORT", "8000"))
+        )
     else:
         # Local mode: stdio transport (default)
         mcp.run()
